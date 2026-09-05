@@ -12,140 +12,301 @@
         }
         :root {
             --gold: #ffd66b;
-            --gold-soft: rgba(255, 214, 107, 0.15);
+            --gold-light: #ffe7a3;
+            --gold-soft: rgba(255, 214, 107, 0.13);
             --bg: #050505;
-            --card: rgba(15, 15, 15, 0.82);
-            --text: #ffffff;
+            --panel: rgba(13, 13, 13, 0.72);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f5f5f5;
             --muted: #777;
+        }
+        html {
+            scroll-behavior: smooth;
         }
         body {
             min-height: 100vh;
-            background: var(--bg);
+            background:
+                radial-gradient(circle at 50% -20%, rgba(255, 214, 107, 0.08), transparent 35%),
+                #050505;
             color: var(--text);
             font-family: Arial, sans-serif;
             overflow-x: hidden;
         }
+        /* =========================
+           BACKGROUND
+        ========================= */
         .background {
             position: fixed;
             inset: 0;
             overflow: hidden;
-            z-index: -1;
+            z-index: -10;
+            pointer-events: none;
+        }
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 55px 55px;
+            mask-image: radial-gradient(
+                circle at center,
+                black,
+                transparent 75%
+            );
+            animation: gridMove 18s linear infinite;
+        }
+        @keyframes gridMove {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(55px);
+            }
         }
         .orb {
             position: absolute;
-            width: 400px;
-            height: 400px;
+            width: 450px;
+            height: 450px;
             border-radius: 50%;
             background: var(--gold-soft);
-            filter: blur(100px);
-            animation: float 10s ease-in-out infinite;
+            filter: blur(120px);
+            opacity: 0.7;
+            animation: orbFloat 12s ease-in-out infinite;
         }
         .orb.one {
-            top: -200px;
-            left: -150px;
+            top: -250px;
+            left: -180px;
         }
         .orb.two {
-            right: -200px;
-            bottom: -200px;
-            animation-delay: -5s;
+            right: -250px;
+            bottom: -250px;
+            animation-delay: -6s;
         }
-        @keyframes float {
+        @keyframes orbFloat {
             0%, 100% {
-                transform: translate(0, 0);
+                transform: translate(0, 0) scale(1);
             }
             50% {
-                transform: translate(70px, 50px);
+                transform: translate(80px, 60px) scale(1.15);
             }
         }
         .particle {
             position: absolute;
-            width: 3px;
-            height: 3px;
+            width: 2px;
+            height: 2px;
             border-radius: 50%;
             background: var(--gold);
-            opacity: 0.4;
-            animation: rise 7s linear infinite;
+            opacity: 0;
+            animation: particleRise 8s linear infinite;
         }
-        @keyframes rise {
-            from {
+        @keyframes particleRise {
+            0% {
                 transform: translateY(110vh);
+                opacity: 0;
             }
-            to {
+            15% {
+                opacity: 0.5;
+            }
+            80% {
+                opacity: 0.3;
+            }
+            100% {
                 transform: translateY(-10vh);
+                opacity: 0;
             }
         }
+        /* =========================
+           CONTAINER
+        ========================= */
         .container {
-            width: 900px;
-            max-width: calc(100% - 30px);
-            margin: 60px auto;
+            width: 920px;
+            max-width: calc(100% - 28px);
+            margin: 35px auto 60px;
         }
+        /* =========================
+           NAV
+        ========================= */
         nav {
+            position: sticky;
+            top: 15px;
+            z-index: 20;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding: 15px 20px;
-            background: rgba(10, 10, 10, 0.7);
-            border: 1px solid #222;
-            border-radius: 14px;
-            backdrop-filter: blur(15px);
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            background: rgba(8, 8, 8, 0.68);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow:
+                0 15px 50px rgba(0,0,0,0.25);
         }
         .logo {
-            font-weight: bold;
             color: var(--gold);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .logo::after {
+            content: "";
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            margin-left: 5px;
+            margin-bottom: 2px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 10px var(--gold);
+            animation: blink 1.8s infinite;
+        }
+        @keyframes blink {
+            0%, 45%, 100% {
+                opacity: 1;
+            }
+            50%, 90% {
+                opacity: 0.25;
+            }
         }
         .nav-links {
             display: flex;
-            gap: 18px;
+            gap: 5px;
         }
         .nav-links button {
-            background: none;
-            border: none;
-            color: #777;
+            position: relative;
+            padding: 9px 13px;
+            background: transparent;
+            border: 0;
+            border-radius: 9px;
+            color: #666;
+            font-size: 13px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.25s ease;
         }
-        .nav-links button:hover,
+        .nav-links button:hover {
+            color: #ddd;
+            background: rgba(255,255,255,0.04);
+        }
         .nav-links button.active {
             color: var(--gold);
+            background: var(--gold-soft);
         }
+        /* =========================
+           SECTIONS
+        ========================= */
         .section {
             display: none;
-            animation: sectionIn 0.35s ease;
         }
         .section.active {
             display: block;
+            animation: pageIn 0.5s cubic-bezier(.2,.8,.2,1);
         }
-        @keyframes sectionIn {
+        @keyframes pageIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(18px) scale(0.985);
+                filter: blur(5px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
+                filter: blur(0);
             }
         }
+        /* =========================
+           PROFILE
+        ========================= */
         .profile {
-            padding: 45px;
+            position: relative;
+            overflow: hidden;
+            padding: 52px 45px 42px;
             text-align: center;
-            background: var(--card);
-            border: 1px solid #252525;
-            border-radius: 22px;
-            backdrop-filter: blur(18px);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.045),
+                    rgba(255,255,255,0.012)
+                );
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
             box-shadow:
-                0 0 70px rgba(255, 214, 107, 0.07);
+                0 30px 100px rgba(0,0,0,0.4),
+                0 0 80px rgba(255,214,107,0.035);
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease;
+        }
+        .profile::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 15%;
+            right: 15%;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--gold),
+                transparent
+            );
+            opacity: 0.6;
+        }
+        .profile::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -80%);
+            background: var(--gold-soft);
+            filter: blur(90px);
+            pointer-events: none;
+        }
+        /* =========================
+           AVATAR
+        ========================= */
+        .avatar-wrap {
+            position: relative;
+            width: 116px;
+            height: 116px;
+            margin: 0 auto 21px;
+        }
+        .avatar-ring {
+            position: absolute;
+            inset: -5px;
+            border: 1px solid rgba(255,214,107,0.35);
+            border-radius: 50%;
+            animation: ringSpin 8s linear infinite;
+        }
+        .avatar-ring::before {
+            content: "";
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            top: -3px;
+            left: 50%;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 15px var(--gold);
+        }
+        @keyframes ringSpin {
+            to {
+                transform: rotate(360deg);
+            }
         }
         .avatar {
             width: 105px;
             height: 105px;
-            margin: 0 auto 20px;
+            margin: auto;
             border-radius: 50%;
             overflow: hidden;
             background: var(--gold);
             box-shadow:
-                0 0 40px rgba(255, 214, 107, 0.35);
-            animation: pulse 3s ease-in-out infinite;
+                0 0 35px rgba(255,214,107,0.25);
+            animation: avatarPulse 3.5s ease-in-out infinite;
         }
         .avatar img {
             width: 100%;
@@ -153,233 +314,419 @@
             display: block;
             object-fit: cover;
         }
-        @keyframes pulse {
+        @keyframes avatarPulse {
             0%, 100% {
                 box-shadow:
-                    0 0 30px rgba(255, 214, 107, 0.3);
+                    0 0 25px rgba(255,214,107,0.22);
             }
             50% {
                 box-shadow:
-                    0 0 55px rgba(255, 214, 107, 0.55);
+                    0 0 50px rgba(255,214,107,0.42);
             }
         }
         h1 {
-            font-size: 32px;
-            margin-bottom: 7px;
+            position: relative;
+            z-index: 2;
+            font-size: 34px;
+            letter-spacing: -1.5px;
+            margin-bottom: 6px;
         }
         .username {
             color: var(--gold);
-            margin-bottom: 20px;
+            font-size: 14px;
+            margin-bottom: 17px;
         }
-        .bio {
-            color: var(--muted);
-            min-height: 22px;
-            margin-bottom: 25px;
-        }
+        /* =========================
+           STATUS
+        ========================= */
         .status {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 7px 12px;
-            margin-bottom: 25px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid #222;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #777;
+            padding: 7px 11px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: #666;
+            font-size: 11px;
+            margin-bottom: 21px;
         }
         .status-dot {
-            width: 7px;
-            height: 7px;
-            background: #62ff91;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            box-shadow: 0 0 10px #62ff91;
+            background: #73ff9b;
+            box-shadow:
+                0 0 8px #73ff9b;
+            animation: statusPulse 2s infinite;
         }
+        @keyframes statusPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.45;
+                transform: scale(0.75);
+            }
+        }
+        /* =========================
+           BIO
+        ========================= */
+        .bio {
+            min-height: 22px;
+            margin-bottom: 27px;
+            color: #777;
+            font-size: 14px;
+        }
+        .cursor {
+            color: var(--gold);
+            animation: cursorBlink 0.8s infinite;
+        }
+        @keyframes cursorBlink {
+            50% {
+                opacity: 0;
+            }
+        }
+        /* =========================
+           SOCIALS
+        ========================= */
         .socials {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 9px;
         }
         .social {
+            position: relative;
+            overflow: hidden;
             padding: 14px;
             text-decoration: none;
-            color: #ddd;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid #252525;
+            color: #ccc;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid var(--border);
             border-radius: 11px;
-            transition: 0.25s;
+            font-size: 13px;
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+        .social::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,214,107,0.08),
+                transparent
+            );
+            transition: 0.5s;
+        }
+        .social:hover::before {
+            left: 100%;
         }
         .social:hover {
             color: var(--gold);
-            border-color: var(--gold);
-            transform: translateY(-3px);
+            border-color: rgba(255,214,107,0.45);
+            transform: translateY(-4px);
             box-shadow:
-                0 8px 25px rgba(255,214,107,0.12);
+                0 12px 30px rgba(255,214,107,0.08);
         }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+        /* =========================
+           MUSIC
+        ========================= */
+        .music {
+            display: flex;
+            align-items: center;
+            gap: 14px;
             margin-top: 15px;
+            padding: 14px;
+            text-align: left;
+            background: rgba(255,255,255,0.022);
+            border: 1px solid var(--border);
+            border-radius: 13px;
         }
-        .card {
-            padding: 25px;
-            background: var(--card);
-            border: 1px solid #252525;
-            border-radius: 17px;
-            backdrop-filter: blur(15px);
-            transition: 0.25s;
+        .album {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 9px;
+            background:
+                radial-gradient(
+                    circle at 40% 35%,
+                    var(--gold-light),
+                    var(--gold),
+                    #8d6d1f
+                );
+            box-shadow:
+                0 0 25px rgba(255,214,107,0.12);
+            animation: albumGlow 3s ease-in-out infinite;
         }
-        .card:hover {
-            transform: translateY(-3px);
-            border-color: #333;
+        .album::after {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(0,0,0,0.5);
+            border-radius: 50%;
         }
-        .card h2 {
-            font-size: 18px;
-            margin-bottom: 12px;
+        @keyframes albumGlow {
+            50% {
+                transform: scale(1.04);
+                box-shadow:
+                    0 0 35px rgba(255,214,107,0.22);
+            }
         }
-        .card p {
-            color: var(--muted);
-            line-height: 1.6;
+        .music-info strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
         }
+        .music-info span {
+            color: #666;
+            font-size: 11px;
+        }
+        /* =========================
+           CLOCK
+        ========================= */
+        .clock {
+            margin-top: 22px;
+            color: #555;
+            font-size: 12px;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+        }
+        /* =========================
+           STATS
+        ========================= */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 12px;
         }
         .stat {
-            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            padding: 19px;
             text-align: center;
-            background: var(--card);
-            border: 1px solid #252525;
+            background: var(--panel);
+            border: 1px solid var(--border);
             border-radius: 15px;
+            backdrop-filter: blur(15px);
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease;
+        }
+        .stat:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,214,107,0.25);
         }
         .stat strong {
             display: block;
-            font-size: 25px;
             color: var(--gold);
-            margin-bottom: 5px;
+            font-size: 23px;
+            margin-bottom: 4px;
         }
         .stat span {
-            color: #666;
-            font-size: 12px;
-        }
-        .project {
-            padding: 20px;
-            margin-bottom: 10px;
-            background: rgba(255,255,255,0.025);
-            border: 1px solid #252525;
-            border-radius: 12px;
-            transition: 0.25s;
-        }
-        .project:hover {
-            border-color: var(--gold);
-            transform: translateX(4px);
-        }
-        .project h3 {
-            margin-bottom: 6px;
-        }
-        .project p {
-            color: #666;
-            font-size: 14px;
-        }
-        .music {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 18px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid #252525;
-            border-radius: 14px;
-            margin-top: 15px;
-        }
-        .album {
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--gold);
-            border-radius: 10px;
-        }
-        .music-info {
-            text-align: left;
-        }
-        .music-info strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .music-info span {
-            color: #666;
-            font-size: 12px;
-        }
-        .clock {
-            margin-top: 25px;
             color: #555;
-            font-size: 13px;
-        }
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #333;
             font-size: 11px;
         }
+        /* =========================
+           CARDS
+        ========================= */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .card {
+            position: relative;
+            overflow: hidden;
+            padding: 25px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            backdrop-filter: blur(18px);
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease;
+        }
+        .card::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            right: -100px;
+            top: -100px;
+            background: var(--gold-soft);
+            filter: blur(50px);
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,214,107,0.22);
+        }
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 11px;
+        }
+        .card p {
+            color: #666;
+            line-height: 1.65;
+            font-size: 14px;
+        }
+        /* =========================
+           PROJECTS
+        ========================= */
+        .project {
+            position: relative;
+            padding: 18px;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.022);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease;
+        }
+        .project:hover {
+            transform: translateX(5px);
+            border-color: rgba(255,214,107,0.4);
+        }
+        .project h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .project p {
+            color: #555;
+            font-size: 12px;
+        }
+        .tag {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 7px;
+            color: var(--gold);
+            background: var(--gold-soft);
+            border-radius: 5px;
+            font-size: 9px;
+        }
+        /* =========================
+           FOOTER
+        ========================= */
+        footer {
+            text-align: center;
+            margin-top: 18px;
+            color: #292929;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+        /* =========================
+           MOBILE
+        ========================= */
         @media (max-width: 650px) {
             .container {
-                margin: 20px auto;
+                max-width: calc(100% - 18px);
+                margin: 12px auto 40px;
             }
             nav {
-                flex-direction: column;
-                gap: 15px;
+                top: 8px;
+                padding: 12px;
+            }
+            .nav-links {
+                gap: 2px;
+            }
+            .nav-links button {
+                padding: 8px 9px;
+                font-size: 11px;
             }
             .profile {
-                padding: 30px 20px;
+                padding: 38px 17px 30px;
+                border-radius: 20px;
+            }
+            .avatar-wrap {
+                transform: scale(0.9);
+                margin-bottom: 13px;
+            }
+            h1 {
+                font-size: 29px;
             }
             .socials {
-                grid-template-columns: 1fr;
-            }
-            .grid {
                 grid-template-columns: 1fr;
             }
             .stats {
                 grid-template-columns: 1fr;
             }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 21px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- BACKGROUND -->
     <div class="background">
+        <div class="grid-bg"></div>
         <div class="orb one"></div>
         <div class="orb two"></div>
-        <div class="particle" style="left:5%; animation-delay:0s;"></div>
-        <div class="particle" style="left:15%; animation-delay:2s;"></div>
-        <div class="particle" style="left:30%; animation-delay:4s;"></div>
-        <div class="particle" style="left:50%; animation-delay:1s;"></div>
-        <div class="particle" style="left:70%; animation-delay:3s;"></div>
-        <div class="particle" style="left:90%; animation-delay:5s;"></div>
+        <div class="particle" style="left:4%; animation-delay:0s;"></div>
+        <div class="particle" style="left:11%; animation-delay:2s;"></div>
+        <div class="particle" style="left:19%; animation-delay:4s;"></div>
+        <div class="particle" style="left:28%; animation-delay:1s;"></div>
+        <div class="particle" style="left:39%; animation-delay:5s;"></div>
+        <div class="particle" style="left:51%; animation-delay:3s;"></div>
+        <div class="particle" style="left:64%; animation-delay:6s;"></div>
+        <div class="particle" style="left:76%; animation-delay:2s;"></div>
+        <div class="particle" style="left:88%; animation-delay:4s;"></div>
+        <div class="particle" style="left:96%; animation-delay:1s;"></div>
     </div>
     <main class="container">
+        <!-- NAV -->
         <nav>
             <div class="logo">
                 tale
             </div>
             <div class="nav-links">
-                <button class="active" onclick="showSection('home', this)">
+                <button
+                    class="active"
+                    onclick="showSection('home', this)"
+                >
                     Home
                 </button>
-                <button onclick="showSection('about', this)">
+                <button
+                    onclick="showSection('about', this)"
+                >
                     About
                 </button>
-                <button onclick="showSection('projects', this)">
+                <button
+                    onclick="showSection('projects', this)"
+                >
                     Projects
                 </button>
             </div>
         </nav>
+        <!-- HOME -->
         <section id="home" class="section active">
-            <div class="profile">
-                <div class="avatar">
-                    <img src="pfp.png.JPG" alt="Profile picture">
+            <div class="profile" id="profileCard">
+                <div class="avatar-wrap">
+                    <div class="avatar-ring"></div>
+                    <div class="avatar">
+                        <img
+                            src="pfp.png.JPG"
+                            alt="Profile picture"
+                        >
+                    </div>
                 </div>
                 <h1>tale</h1>
                 <div class="username">
@@ -389,7 +736,10 @@
                     <span class="status-dot"></span>
                     currently online
                 </div>
-                <p class="bio" id="typing"></p>
+                <p class="bio">
+                    <span id="typing"></span>
+                    <span class="cursor">|</span>
+                </p>
                 <div class="socials">
                     <a class="social" href="#">
                         Discord
@@ -404,74 +754,115 @@
                 <div class="music">
                     <div class="album"></div>
                     <div class="music-info">
-                        <strong>Currently listening</strong>
-                        <span>your song here</span>
+                        <strong>
+                            Currently listening
+                        </strong>
+                        <span>
+                            your song here
+                        </span>
                     </div>
                 </div>
-                <div class="clock" id="clock">
+                <div
+                    class="clock"
+                    id="clock"
+                >
                     00:00:00
                 </div>
             </div>
             <div class="stats">
                 <div class="stat">
                     <strong>∞</strong>
-                    <span>Ideas</span>
+                    <span>
+                        Ideas
+                    </span>
                 </div>
                 <div class="stat">
                     <strong>3</strong>
-                    <span>Projects</span>
+                    <span>
+                        Projects
+                    </span>
                 </div>
                 <div class="stat">
                     <strong>24/7</strong>
-                    <span>Online</span>
+                    <span>
+                        Online
+                    </span>
                 </div>
             </div>
         </section>
+        <!-- ABOUT -->
         <section id="about" class="section">
             <div class="grid">
                 <div class="card">
-                    <h2>About me</h2>
+                    <h2>
+                        About me
+                    </h2>
                     <p>
-                        just a person making random things
-                        on the internet.
+                        just a person making random
+                        things on the internet.
                     </p>
                 </div>
                 <div class="card">
-                    <h2>Interests</h2>
+                    <h2>
+                        Interests
+                    </h2>
                     <p>
                         coding, websites, design,
                         technology and random projects.
                     </p>
                 </div>
             </div>
-            <div class="card" style="margin-top:15px;">
-                <h2>My setup</h2>
+            <div
+                class="card"
+                style="margin-top:12px;"
+            >
+                <h2>
+                    My setup
+                </h2>
                 <p>
                     currently building things from
                     wherever I happen to be.
                 </p>
             </div>
         </section>
+        <!-- PROJECTS -->
         <section id="projects" class="section">
             <div class="card">
-                <h2>Projects</h2>
+                <h2>
+                    Projects
+                </h2>
                 <div class="project">
-                    <h3>tale</h3>
+                    <h3>
+                        tale
+                    </h3>
                     <p>
                         this website you're looking at.
                     </p>
+                    <span class="tag">
+                        website
+                    </span>
                 </div>
                 <div class="project">
-                    <h3>Project Two</h3>
+                    <h3>
+                        Project Two
+                    </h3>
                     <p>
                         something cool coming soon.
                     </p>
+                    <span class="tag">
+                        in progress
+                    </span>
                 </div>
                 <div class="project">
-                    <h3>Project Three</h3>
+                    <h3>
+                        Project Three
+                    </h3>
                     <p>
                         another idea in progress.
                     </p>
+                    <span class="tag">
+                        experimental
+                    </span>
                 </div>
             </div>
         </section>
@@ -480,19 +871,32 @@
         </footer>
     </main>
     <script>
+        /* =========================
+           PAGE NAVIGATION
+        ========================= */
         function showSection(id, button) {
-            document.querySelectorAll(".section")
+            document
+                .querySelectorAll(".section")
                 .forEach(section => {
                     section.classList.remove("active");
                 });
-            document.getElementById(id)
+            document
+                .getElementById(id)
                 .classList.add("active");
-            document.querySelectorAll(".nav-links button")
+            document
+                .querySelectorAll(".nav-links button")
                 .forEach(btn => {
                     btn.classList.remove("active");
                 });
             button.classList.add("active");
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         }
+        /* =========================
+           TYPING EFFECT
+        ========================= */
         const text =
             "your little corner of the internet.";
         const typing =
@@ -507,20 +911,64 @@
             }
         }
         typeText();
+        /* =========================
+           LIVE CLOCK
+        ========================= */
         function updateClock() {
             const now = new Date();
             const hours =
-                String(now.getHours()).padStart(2, "0");
+                String(now.getHours())
+                    .padStart(2, "0");
             const minutes =
-                String(now.getMinutes()).padStart(2, "0");
+                String(now.getMinutes())
+                    .padStart(2, "0");
             const seconds =
-                String(now.getSeconds()).padStart(2, "0");
+                String(now.getSeconds())
+                    .padStart(2, "0");
             document.getElementById("clock")
                 .textContent =
                 `${hours}:${minutes}:${seconds}`;
         }
         updateClock();
         setInterval(updateClock, 1000);
+        /* =========================
+           DESKTOP CARD TILT
+        ========================= */
+        const profile =
+            document.getElementById("profileCard");
+        document.addEventListener(
+            "mousemove",
+            (event) => {
+                if (window.innerWidth <= 650) {
+                    return;
+                }
+                const rect =
+                    profile.getBoundingClientRect();
+                const x =
+                    event.clientX - rect.left;
+                const y =
+                    event.clientY - rect.top;
+                const centerX =
+                    rect.width / 2;
+                const centerY =
+                    rect.height / 2;
+                const rotateX =
+                    ((y - centerY) / centerY) * -2;
+                const rotateY =
+                    ((x - centerX) / centerX) * 2;
+                profile.style.transform =
+                    `perspective(1000px)
+                     rotateX(${rotateX}deg)
+                     rotateY(${rotateY}deg)`;
+            }
+        );
+        profile.addEventListener(
+            "mouseleave",
+            () => {
+                profile.style.transform =
+                    "perspective(1000px) rotateX(0deg) rotateY(0deg)";
+            }
+        );
     </script>
 </body>
 </html>
